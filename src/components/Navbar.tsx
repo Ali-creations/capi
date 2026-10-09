@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { Terminal, Share2, MessageSquare, Menu, X, Check } from 'lucide-react';
+import { Terminal, Share2, MessageSquare, Menu, X, Check, Bot } from 'lucide-react';
+import { ThemeSwitcher } from './ThemeSwitcher';
+import { useTheme } from '../context/ThemeContext';
 import { sound } from '../utils/audio';
 
 interface NavbarProps {
   onOpenCodeInspect: () => void;
   onOpenFastMessage: () => void;
+  onOpenAgentTerminal: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMessage }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenCodeInspect,
+  onOpenFastMessage,
+  onOpenAgentTerminal,
+}) => {
+  const { palette } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [copiedShare, setCopiedShare] = useState(false);
 
@@ -34,8 +42,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
         {/* Left Brand Lockup */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-9 h-9 rounded-lg bg-[#F59E0B]/10 border border-[#F59E0B]/30 flex items-center justify-center text-[#FFB800] shadow-[0_0_15px_rgba(245,158,11,0.15)]">
-            <span className="font-mono text-sm font-bold">&lt;/&gt;</span>
+          <div
+            className="w-9 h-9 rounded-lg flex items-center justify-center font-mono text-sm font-bold border transition-colors shadow-sm"
+            style={{
+              backgroundColor: `${palette.primary}15`,
+              borderColor: `${palette.primary}40`,
+              color: palette.primary,
+            }}
+          >
+            &lt;/&gt;
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -55,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
         </div>
 
         {/* Center Nav Links */}
-        <nav className="hidden lg:flex items-center gap-8 font-mono text-xs text-gray-400">
+        <nav className="hidden lg:flex items-center gap-7 font-mono text-xs text-gray-400">
           {[
             { id: 'skills', label: '01. Skills' },
             { id: 'projects', label: '02. Projects' },
@@ -66,19 +81,43 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
             <button
               key={item.id}
               onClick={() => handleNavClick(item.id)}
-              className="hover:text-[#FFB800] transition-colors py-1 relative group cursor-pointer"
+              className="hover:text-white transition-colors py-1 relative group cursor-pointer"
             >
               <span>{item.label}</span>
-              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#FFB800] transition-all duration-200 group-hover:w-full" />
+              <span
+                className="absolute bottom-0 left-0 w-0 h-[2px] transition-all duration-200 group-hover:w-full"
+                style={{ backgroundColor: palette.primary }}
+              />
             </button>
           ))}
         </nav>
 
         {/* Right Action Island */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Professional Palette Collab Switcher */}
+          <ThemeSwitcher />
+
+          {/* Interactive Agent Terminal Button */}
+          <button
+            onClick={() => {
+              sound.playSuccess();
+              onOpenAgentTerminal();
+            }}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-gray-300 hover:text-white cursor-pointer transition-all"
+            title="Talk to Mr. Ali's Autonomous AI Agent"
+          >
+            <Bot className="w-3.5 h-3.5" style={{ color: palette.primary }} />
+            <span>AI Console</span>
+          </button>
+
+          {/* Initiate Signal CTA */}
           <button
             onClick={() => handleNavClick('contact')}
-            className="px-4 py-2 rounded-md bg-[#F59E0B] hover:bg-[#ffb800] text-[#090A0F] font-bold text-xs uppercase tracking-wider glow-amber-btn shadow-[0_0_20px_rgba(245,158,11,0.3)] flex items-center gap-2 cursor-pointer transition-all"
+            className="px-4 py-2 rounded-md font-bold text-xs uppercase tracking-wider glow-amber-btn flex items-center gap-2 cursor-pointer transition-all text-[#090A0F]"
+            style={{
+              backgroundColor: palette.primary,
+              boxShadow: `0 0 20px ${palette.primaryGlow}`,
+            }}
           >
             <span>INITIATE SIGNAL</span>
           </button>
@@ -91,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
                 onOpenCodeInspect();
               }}
               title="Inspect System Telemetry & Architecture"
-              className="w-8 h-8 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#F59E0B]/40 text-gray-400 hover:text-[#FFB800] flex items-center justify-center transition-all cursor-pointer"
+              className="w-8 h-8 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all cursor-pointer"
             >
               <Terminal className="w-3.5 h-3.5" />
             </button>
@@ -99,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
             <button
               onClick={handleShare}
               title={copiedShare ? 'Copied link!' : 'Share Portfolio link'}
-              className="w-8 h-8 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#F59E0B]/40 text-gray-400 hover:text-[#FFB800] flex items-center justify-center transition-all cursor-pointer relative"
+              className="w-8 h-8 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all cursor-pointer"
             >
               {copiedShare ? (
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -114,7 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
                 onOpenFastMessage();
               }}
               title="Quick Transmission Dispatch"
-              className="w-8 h-8 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#F59E0B]/40 text-gray-400 hover:text-[#FFB800] flex items-center justify-center transition-all cursor-pointer"
+              className="w-8 h-8 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all cursor-pointer"
             >
               <MessageSquare className="w-3.5 h-3.5" />
             </button>
@@ -133,6 +172,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-[#090A0F] border-b border-white/10 px-4 py-4 space-y-2 font-mono text-sm">
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              onOpenAgentTerminal();
+            }}
+            className="w-full text-left py-2 px-3 rounded bg-white/5 border border-white/10 text-white flex items-center gap-2"
+          >
+            <Bot className="w-4 h-4" style={{ color: palette.primary }} />
+            <span>Launch Mr. Ali AI Console</span>
+          </button>
           {[
             { id: 'skills', label: '01. Skills & Architecture' },
             { id: 'projects', label: '02. Upgraded Projects' },
@@ -143,7 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCodeInspect, onOpenFastMes
             <button
               key={item.id}
               onClick={() => handleNavClick(item.id)}
-              className="block w-full text-left py-2 px-3 rounded hover:bg-white/5 text-gray-300 hover:text-[#FFB800]"
+              className="block w-full text-left py-2 px-3 rounded hover:bg-white/5 text-gray-300 hover:text-white"
             >
               {item.label}
             </button>

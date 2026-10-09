@@ -71,8 +71,9 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onWhatsAppClick }
             </div>
 
             {/* 4 Technical Parameter / Attribute Metric Cells */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/10">
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[#F59E0B]/30 transition-all group">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/10 relative">
+              <div className="p-3.5 rounded-lg bg-[#0D1117]/60 backdrop-blur-md border border-white/5 hover:border-[#F59E0B]/40 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#FFB800]/40" />
                 <div className="flex items-center gap-1.5 mb-1 text-[#FFB800]">
                   <Bot className="w-3.5 h-3.5" />
                   <span className="font-mono text-xs font-bold text-white group-hover:text-[#FFB800] transition-colors">
@@ -82,7 +83,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onWhatsAppClick }
                 <div className="text-[11px] font-mono text-gray-400">Autonomous Loops</div>
               </div>
 
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[#06B6D4]/30 transition-all group">
+              <div className="p-3.5 rounded-lg bg-[#0D1117]/60 backdrop-blur-md border border-white/5 hover:border-[#06B6D4]/40 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#06B6D4]/40" />
                 <div className="flex items-center gap-1.5 mb-1 text-[#4cd7f6]">
                   <Cpu className="w-3.5 h-3.5" />
                   <span className="font-mono text-xs font-bold text-white group-hover:text-[#4cd7f6] transition-colors">
@@ -92,7 +94,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onWhatsAppClick }
                 <div className="text-[11px] font-mono text-gray-400">Quantized Runs</div>
               </div>
 
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[#FFB800]/30 transition-all group">
+              <div className="p-3.5 rounded-lg bg-[#0D1117]/60 backdrop-blur-md border border-white/5 hover:border-[#FFB800]/40 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#FFB800]/40" />
                 <div className="flex items-center gap-1.5 mb-1 text-[#FFB800]">
                   <Layers className="w-3.5 h-3.5" />
                   <span className="font-mono text-xs font-bold text-white group-hover:text-[#FFB800] transition-colors">
@@ -102,7 +105,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onWhatsAppClick }
                 <div className="text-[11px] font-mono text-gray-400">End-to-End Core</div>
               </div>
 
-              <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[#10B981]/30 transition-all group">
+              <div className="p-3.5 rounded-lg bg-[#0D1117]/60 backdrop-blur-md border border-white/5 hover:border-[#10B981]/40 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#10B981]/40" />
                 <div className="flex items-center gap-1.5 mb-1 text-[#10B981]">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span className="font-mono text-xs font-bold text-white group-hover:text-[#10B981] transition-colors">

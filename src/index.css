@@ -16,7 +16,7 @@
 
 /* Custom cybernetic glow and glass classes */
 .glass-panel {
-  background: rgba(13, 17, 23, 0.75);
+  background: rgba(13, 17, 23, 0.78);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -24,12 +24,25 @@
 
 .glass-panel-hover {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .glass-panel-hover:hover {
   border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 0 30px -5px rgba(245, 158, 11, 0.2), inset 0 0 15px rgba(245, 158, 11, 0.03);
   transform: translateY(-2px);
+}
+
+/* Subtle cyber scanlines overlay on hero / backdrop */
+.cyber-scanlines {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0) 50%,
+    rgba(0, 0, 0, 0.25) 50%,
+    rgba(0, 0, 0, 0.25)
+  );
+  background-size: 100% 4px;
 }
 
 .glow-amber-btn {

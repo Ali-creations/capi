@@ -10,12 +10,16 @@ import { Footer } from './components/Footer';
 import { PrintDossierModal } from './components/PrintDossierModal';
 import { CodeInspectModal } from './components/CodeInspectModal';
 import { RepoListModal } from './components/RepoListModal';
+import { AgentTerminalModal } from './components/AgentTerminalModal';
+import { MotionGraphicsBackground } from './components/MotionGraphicsBackground';
+import { ThemeProvider } from './context/ThemeContext';
 import { sound } from './utils/audio';
 
-export default function App() {
+function PortfolioApp() {
   const [isPrintDossierOpen, setIsPrintDossierOpen] = useState(false);
   const [isCodeInspectOpen, setIsCodeInspectOpen] = useState(false);
   const [isRepoListOpen, setIsRepoListOpen] = useState(false);
+  const [isAgentTerminalOpen, setIsAgentTerminalOpen] = useState(false);
 
   const scrollToSection = (id: string) => {
     sound.playBeep(520, 0.05);
@@ -33,21 +37,25 @@ export default function App() {
     window.open(`https://wa.me/923234503036?text=${msg}`, '_blank');
   };
 
-  const handleSelectProject = (projectTitle: string) => {
+  const handleSelectProject = (_projectTitle: string) => {
     sound.playSuccess();
     setIsRepoListOpen(true);
   };
 
   return (
     <div className="min-h-screen bg-[#090A0F] text-[#F9FAFB] flex flex-col font-sans selection:bg-[#F59E0B]/30 selection:text-[#FFB800] relative">
+      {/* Advanced Kinetic Motion Graphics Canvas Layer */}
+      <MotionGraphicsBackground />
+
       {/* Top Navigation */}
       <Navbar
         onOpenCodeInspect={() => setIsCodeInspectOpen(true)}
         onOpenFastMessage={() => scrollToSection('contact')}
+        onOpenAgentTerminal={() => setIsAgentTerminalOpen(true)}
       />
 
       {/* Main Content Layout */}
-      <main className="flex-grow">
+      <main className="flex-grow relative z-10">
         {/* Hero with Interactive 3D WebGL Neural Core */}
         <Hero
           onExploreProjects={() => scrollToSection('projects')}
@@ -95,6 +103,21 @@ export default function App() {
         isOpen={isRepoListOpen}
         onClose={() => setIsRepoListOpen(false)}
       />
+
+      {/* Autonomous AI Architecture Agent Console Modal */}
+      <AgentTerminalModal
+        isOpen={isAgentTerminalOpen}
+        onClose={() => setIsAgentTerminalOpen(false)}
+      />
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <PortfolioApp />
+    </ThemeProvider>
+  );
+}
+

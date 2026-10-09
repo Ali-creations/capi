@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Volume2, VolumeX, Activity } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { useTheme } from '../context/ThemeContext';
 
 interface NeuralCore3DProps {
   onInteract?: () => void;
 }
 
 export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
+  const { palette } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const [soundActive, setSoundActive] = useState<boolean>(sound.enabled);
   const [fps, setFps] = useState<number>(60);
@@ -36,17 +38,17 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
     renderer.domElement.className = 'w-full h-full object-contain';
     container.appendChild(renderer.domElement);
 
-    // Lights
+    // Dynamic light color based on current palette
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
     scene.add(ambientLight);
 
-    const pointLightAmber = new THREE.PointLight(0xf59e0b, 4.5, 35);
-    pointLightAmber.position.set(5, 5, 5);
-    scene.add(pointLightAmber);
+    const pointLightPrimary = new THREE.PointLight(palette.threeColorHex, 4.5, 35);
+    pointLightPrimary.position.set(5, 5, 5);
+    scene.add(pointLightPrimary);
 
-    const pointLightCyan = new THREE.PointLight(0x06b6d4, 3.2, 35);
-    pointLightCyan.position.set(-5, -3, 4);
-    scene.add(pointLightCyan);
+    const pointLightSecondary = new THREE.PointLight(palette.secondaryThreeHex, 3.2, 35);
+    pointLightSecondary.position.set(-5, -3, 4);
+    scene.add(pointLightSecondary);
 
     // Master Group
     const coreGroup = new THREE.Group();
@@ -56,8 +58,8 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
     const coreGeo = new THREE.IcosahedronGeometry(1.35, 2);
     const coreMat = new THREE.MeshPhongMaterial({
       color: 0x0c0e14,
-      emissive: 0x221805,
-      specular: 0xf59e0b,
+      emissive: 0x11131a,
+      specular: palette.threeColorHex,
       shininess: 95,
       transparent: true,
       opacity: 0.92,
@@ -68,7 +70,7 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
     // Core glowing wireframe
     const wireGeo = new THREE.IcosahedronGeometry(1.38, 2);
     const wireMat = new THREE.MeshBasicMaterial({
-      color: 0xf59e0b,
+      color: palette.threeColorHex,
       wireframe: true,
       transparent: true,
       opacity: 0.5,
@@ -79,7 +81,7 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
     // Inner pulsing energy sphere
     const innerSphereGeo = new THREE.SphereGeometry(0.8, 24, 24);
     const innerSphereMat = new THREE.MeshBasicMaterial({
-      color: 0xfbbf24,
+      color: palette.threeColorHex,
       transparent: true,
       opacity: 0.85,
     });
@@ -88,8 +90,8 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
 
     // Orbital Gimbal Rings
     const ringMats = [
-      new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.75, side: THREE.DoubleSide }),
-      new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.65, side: THREE.DoubleSide }),
+      new THREE.MeshBasicMaterial({ color: palette.threeColorHex, transparent: true, opacity: 0.75, side: THREE.DoubleSide }),
+      new THREE.MeshBasicMaterial({ color: palette.secondaryThreeHex, transparent: true, opacity: 0.65, side: THREE.DoubleSide }),
       new THREE.MeshBasicMaterial({ color: 0xe2e8f0, transparent: true, opacity: 0.45, side: THREE.DoubleSide }),
     ];
 
@@ -126,8 +128,7 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
     for (let i = 0; i < satCount; i++) {
       const satGeo = new THREE.OctahedronGeometry(0.14, 0);
       const satMat = new THREE.MeshPhongMaterial({
-        color: i % 2 === 0 ? 0xf59e0b : 0x38bdf8,
-        emissive: i % 2 === 0 ? 0x92400e : 0x0369a1,
+        color: i % 2 === 0 ? palette.threeColorHex : palette.secondaryThreeHex,
         shininess: 100,
       });
       const sat = new THREE.Mesh(satGeo, satMat);
@@ -155,7 +156,7 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
     const particleGeo = new THREE.BufferGeometry();
     particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
     const particleMat = new THREE.PointsMaterial({
-      color: 0xf59e0b,
+      color: palette.threeColorHex,
       size: 0.05,
       transparent: true,
       opacity: 0.8,
@@ -306,7 +307,7 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
       particleMat.dispose();
       renderer.dispose();
     };
-  }, [onInteract]);
+  }, [onInteract, palette]);
 
   const toggleSound = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -320,26 +321,33 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
       <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 flex flex-col items-end gap-1.5 pointer-events-auto">
         <button
           onClick={toggleSound}
-          className={`px-3 py-1.5 rounded-full text-xs font-mono flex items-center gap-1.5 border transition-all ${
-            soundActive
-              ? 'bg-[#F59E0B]/10 border-[#F59E0B]/40 text-[#FFB800] hover:bg-[#F59E0B]/20 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
-              : 'bg-black/40 border-white/10 text-gray-400 hover:text-gray-200 hover:border-white/20'
-          }`}
+          className="px-3 py-1.5 rounded-full text-xs font-mono flex items-center gap-1.5 border transition-all cursor-pointer"
+          style={{
+            backgroundColor: soundActive ? `${palette.primary}15` : 'rgba(0,0,0,0.4)',
+            borderColor: soundActive ? `${palette.primary}40` : 'rgba(255,255,255,0.1)',
+            color: soundActive ? palette.primary : '#9ca3af',
+          }}
           title="Toggle audio synthesizer sound effects"
         >
-          {soundActive ? <Volume2 className="w-3.5 h-3.5 text-[#FFB800]" /> : <VolumeX className="w-3.5 h-3.5" />}
+          {soundActive ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
           <span>Audio: {soundActive ? 'ON' : 'OFF'}</span>
         </button>
-        <div className="text-[11px] font-mono text-[#FFB800]/90 tracking-wider flex items-center gap-1.5">
-          <Activity className="w-3 h-3 text-[#FFB800] animate-pulse" />
+        <div
+          className="text-[11px] font-mono tracking-wider flex items-center gap-1.5"
+          style={{ color: palette.primary }}
+        >
+          <Activity className="w-3 h-3 animate-pulse" />
           <span>Interactive 3D Neural Core</span>
         </div>
       </div>
 
       {/* Dynamic Tag Overlay */}
       <div className="absolute top-1/3 left-4 sm:left-8 z-10 pointer-events-none">
-        <div className="px-2.5 py-1 rounded-full bg-black/60 border border-[#06B6D4]/30 text-[10px] sm:text-xs font-mono text-[#4cd7f6] flex items-center gap-1.5 shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#06B6D4] animate-ping" />
+        <div
+          className="px-2.5 py-1 rounded-full bg-black/60 border text-[10px] sm:text-xs font-mono flex items-center gap-1.5 shadow-sm"
+          style={{ borderColor: `${palette.primary}40`, color: palette.primary }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full animate-ping" style={{ backgroundColor: palette.primary }} />
           <span>WEBGL 2.0 DYNAMIC</span>
         </div>
       </div>
@@ -353,9 +361,12 @@ export const NeuralCore3D: React.FC<NeuralCore3DProps> = ({ onInteract }) => {
       {/* Bottom Telemetry Overlay matching Image */}
       <div className="absolute bottom-2 sm:bottom-4 left-4 right-4 z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 text-[11px] font-mono text-gray-400 border-t border-white/5 pt-2">
         <div className="flex items-center gap-2 text-gray-300">
-          <span className="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]" />
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: palette.primary, boxShadow: `0 0 8px ${palette.primary}` }}
+          />
           <span className="font-semibold text-white">Direct 3D Interaction</span>
-          <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-[#4cd7f6]">
+          <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-gray-300">
             {fps}FPS
           </span>
         </div>
